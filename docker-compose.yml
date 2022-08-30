@@ -1,0 +1,54 @@
+# https://phptoday.ru/post/gotovim-lokalnuyu-sredu-docker-dlya-razrabotki-na-php
+# Версия docker-compose
+version: '3'
+# Список наших сервисов (контейнеров)
+services:
+  app:
+    container_name: golang_container
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+      - DATABASE_HOST=${DB_HOST}
+      - DATABASE_PORT=${DB_PORT}
+      - GOPATH=/usr/src/app/
+      - TELEGRAM_BOT=${TELEGRAM_BOT}
+      - JIRA_URL=${JIRA_URL}
+      - TELEGRAM_URL=${TELEGRAM_URL}
+      - JIRA_USER=${JIRA_USER}
+      - JIRA_PASS=${JIRA_PASS}
+      - TELEGRAM_ID=${TELEGRAM_ID}
+    tty: true
+    build: .
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - ./app:/usr/src/app/
+    networks:
+      - fullstack
+  db:
+    image: postgres
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_database:/var/lib/postgresql/data:Z
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      TZ: 'Europe/Moscow'
+      PGTZ: 'Europe/Moscow'
+    networks:
+      - fullstack
+volumes:
+  postgres_database:
+    external: false
+networks:
+  fullstack:
+    driver: bridge

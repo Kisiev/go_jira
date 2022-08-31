@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy go mod and sum files
 COPY go.mod ./
-
+RUN go mod download
 # Download all dependencies. Dependencies will be cached if the go.mod and the go.sum files are not changed
 # RUN go mod download
 
@@ -31,6 +31,9 @@ COPY --from=builder /app/main .
 COPY --from=builder /app/.env .
 
 ENV GOPATH=/usr/src/app/
+
+RUN curl -OL https://golang.org/dl/go1.17.linux-arm64.tar.gz; mkdir /etc/golang; tar -xvzf go1.17.linux-arm64.tar.gz -C /etc/golang; ln -s /etc/golang/go/bin/go /usr/bin/go; rm -f go1.17.linux-arm64.tar.gz
+RUN go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest; ln -s /root/go/bin/jb /usr/bin/jb
 
 # Expose port 8080 to the outside world
 EXPOSE 8080

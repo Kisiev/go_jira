@@ -1,5 +1,5 @@
 start:
 	docker-compose up -d
-	docker-compose up -d --no-deps --build app
+	docker-compose up -d --build app
 build:
-	docker-compose up -d --no-deps --build app
+	docker-compose up -d --build app

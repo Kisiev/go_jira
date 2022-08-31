@@ -1,6 +1,9 @@
 package formatter
 
-import "main/entity"
+import (
+	"main/entity"
+	"main/model"
+)
 
 type FormattedTasks struct {
 	Url      string
@@ -10,5 +13,5 @@ type FormattedTasks struct {
 }
 
 type Formatter interface {
-	Format(task entity.Task) []FormattedTasks
+	Format(task entity.Task) []model.Task
 }

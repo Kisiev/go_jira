@@ -1,4 +1,4 @@
-package main
+package jira
 
 import (
 	"encoding/base64"
@@ -19,9 +19,9 @@ type taskRequest struct {
 	Fields     []string `json:"fields"`
 }
 
-func getData() entity.Task {
+func GetTasks() entity.JiraTask {
 
-	var task entity.Task
+	var task entity.JiraTask
 	var payloadData = taskRequest{
 		Jql:        fmt.Sprintf("project = TRACEWAY and assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY created DESC", helper.GetEnv("JIRA_USER", "")),
 		StartAt:    0,

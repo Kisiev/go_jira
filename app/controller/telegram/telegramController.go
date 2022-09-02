@@ -1,31 +1,22 @@
 package telegram
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
+	"main/entity"
 	"main/helper"
 	"net/http"
 )
 
 func Webhook(w http.ResponseWriter, r *http.Request) {
-	all, err := ioutil.ReadAll(r.Body)
+	var telegramUpdate entity.TelegramUpdate
+
+	err := json.NewDecoder(r.Body).Decode(&telegramUpdate)
 	if err != nil {
 		return
 	}
-	marshal, err := json.Marshal(all)
-	if err != nil {
-		return
-	}
-	_, err = base64.StdEncoding.DecodeString(string(marshal))
-	if err != nil {
-		return
-	}
-	_ = []byte("sa")
-	fmt.Println(marshal)
 }
 
 func SetWebhook(w http.ResponseWriter, r *http.Request) {

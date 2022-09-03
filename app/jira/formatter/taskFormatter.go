@@ -1,7 +1,7 @@
 package formatter
 
 import (
-	"main/entity"
+	"main/jira/entity"
 )
 
 type JiraFormatter struct{}

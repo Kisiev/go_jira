@@ -2,6 +2,8 @@ package telegram
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"main/helper"
 	"net/http"
@@ -45,4 +47,49 @@ func (b Bot) SimpleSendMessage(message string, userId string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (b Bot) SetWebhook(url string) []byte {
+	requestUrl := fmt.Sprintf("%s/bot%s/setWebhook?url=%s",
+		helper.GetEnv("TELEGRAM_URL", ""),
+		helper.GetEnv("TELEGRAM_BOT", ""),
+		url,
+	)
+
+	response, err := http.Get(requestUrl)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil
+	}
+
+	return body
+}
+
+func (b Bot) GetWebhookInfo() []byte {
+	url := fmt.Sprintf("%s/bot%s/getWebhookInfo",
+		helper.GetEnv("TELEGRAM_URL", ""),
+		helper.GetEnv("TELEGRAM_BOT", ""),
+	)
+
+	response, err := http.Get(url)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal("Cannot read a response")
+	}
+
+	return body
 }

@@ -2,7 +2,7 @@ package formatter
 
 import (
 	"fmt"
-	"main/entity"
+	"main/jira/entity"
 )
 
 func FormatMessage(task entity.Task) string {

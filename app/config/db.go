@@ -7,12 +7,10 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"main/helper"
-	"main/model"
+	userModel "main/user/model"
 )
 
-var connection *gorm.DB
-
-func InitDb() {
+func InitDb() *gorm.DB {
 	connectionString := fmt.Sprintf("%s://%s:%s@%s:%s/%s",
 		helper.GetEnv("DB_CONNECTION", "postgres"),
 		helper.GetEnv("DB_USERNAME", "test"),
@@ -22,20 +20,22 @@ func InitDb() {
 		helper.GetEnv("DB_DATABASE", "test"),
 	)
 
-	connection, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+	conn, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("Cannot connect to database")
 	}
 
-	err = connection.AutoMigrate(&model.User{})
-	err = connection.AutoMigrate(&model.JiraUser{})
+	err = conn.AutoMigrate(&userModel.User{})
+	err = conn.AutoMigrate(&userModel.JiraUser{})
 
 	if err != nil {
 		log.Fatal("Cannot migrate")
 	}
+
+	return conn
 }
 
 func DbConnection() *gorm.DB {
-	return connection
+	return InitDb()
 }

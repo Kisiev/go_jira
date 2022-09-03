@@ -1,4 +1,4 @@
-package jira
+package command
 
 import (
 	"encoding/base64"
@@ -6,9 +6,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"main/entity"
 	"main/helper"
+	"main/jira/entity"
+	taskFormatter "main/jira/formatter"
+	"main/telegram"
+	telegramEntity "main/telegram/entity"
+	"main/user/repository"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -19,11 +24,13 @@ type taskRequest struct {
 	Fields     []string `json:"fields"`
 }
 
-func GetTasks() entity.JiraTask {
+type JiraTaskCommand struct{}
+
+func GetTasksForUser(userName string) entity.JiraTask {
 
 	var task entity.JiraTask
 	var payloadData = taskRequest{
-		Jql:        fmt.Sprintf("project = TRACEWAY and assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY created DESC", helper.GetEnv("JIRA_USER", "")),
+		Jql:        fmt.Sprintf("project = TRACEWAY and assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY created DESC", userName),
 		StartAt:    0,
 		MaxResults: 20,
 		Fields: []string{
@@ -79,4 +86,24 @@ func GetTasks() entity.JiraTask {
 func basicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
+}
+
+func (u JiraTaskCommand) Run(update telegramEntity.TelegramUpdate) {
+	var bot telegram.BotInterface = telegram.Bot{}
+
+	telegramMessage := update.Message
+	user := repository.FindJiraUserByTelegramId(telegramMessage.From.Id)
+
+	jiraData := GetTasksForUser(user.UserName)
+
+	var formatter taskFormatter.Formatter = taskFormatter.JiraFormatter{}
+	data := formatter.Format(jiraData)
+
+	var message string
+
+	for _, item := range data {
+		message += taskFormatter.FormatMessage(item)
+	}
+
+	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id))
 }

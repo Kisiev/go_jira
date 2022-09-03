@@ -9,9 +9,9 @@ import (
 	"main/helper"
 	"main/jira/entity"
 	taskFormatter "main/jira/formatter"
+	"main/jira/repository"
 	"main/telegram"
 	telegramEntity "main/telegram/entity"
-	"main/user/repository"
 	"net/http"
 	"strconv"
 	"strings"
@@ -103,6 +103,10 @@ func (u JiraTaskCommand) Run(update telegramEntity.TelegramUpdate) {
 
 	for _, item := range data {
 		message += taskFormatter.FormatMessage(item)
+	}
+
+	if len(message) == 0 {
+		message = fmt.Sprintf("Для пользователя %s не найдены задачи", user.UserName)
 	}
 
 	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id))

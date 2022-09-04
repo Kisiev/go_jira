@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"main/config"
 	"main/telegram/controller"
-	"main/user/model"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -25,8 +23,7 @@ func handleRequest() {
 }
 
 func debug(w http.ResponseWriter, r *http.Request) {
-	var user model.JiraUser
-	config.DbConnection().Model(model.JiraUser{}).Joins("join users on users.id = jira_users.user_id").Where("users.telegram_id = ?", "109946632").First(&user)
-	F := 1
-	fmt.Print(F)
+	dateStart := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
+	dateEnd := time.Now().Format("2006-01-02")
+	w.Write([]byte(dateStart + dateEnd))
 }

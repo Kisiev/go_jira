@@ -6,7 +6,9 @@ import (
 )
 
 func FindOrCreate(user *model.User) {
-	config.DbConnection().FirstOrCreate(&user)
+	if config.DbConnection().Where("telegram_id = ?", user.TelegramId).Find(&user).RowsAffected == 0 {
+		Save(user)
+	}
 }
 
 func Save(user *model.User) {

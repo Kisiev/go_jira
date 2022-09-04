@@ -33,6 +33,12 @@ type Issues struct {
 			Description string `json:"description,omitempty"`
 			ReleaseDate string `json:"releaseDate,omitempty"`
 		} `json:"versions"`
+		TimeTracking struct {
+			RemainingEstimate        string `json:"remainingEstimate"`
+			TimeSpent                string `json:"timeSpent"`
+			RemainingEstimateSeconds int    `json:"remainingEstimateSeconds"`
+			TimeSpentSeconds         int    `json:"timeSpentSeconds"`
+		} `json:"timetracking"`
 		Description string `json:"description"`
 		Priority    struct {
 			Self    string `json:"self"`

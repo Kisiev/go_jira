@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"main/helper"
+	"main/telegram/model"
 	userModel "main/user/model"
 )
 
@@ -28,6 +29,7 @@ func InitDb() *gorm.DB {
 
 	err = conn.AutoMigrate(&userModel.User{})
 	err = conn.AutoMigrate(&userModel.JiraUser{})
+	err = conn.AutoMigrate(&model.Log{})
 
 	if err != nil {
 		log.Fatal("Cannot migrate")

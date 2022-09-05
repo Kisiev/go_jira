@@ -5,10 +5,12 @@ import (
 	"main/telegram"
 	"main/telegram/command"
 	"main/telegram/entity"
+	"main/telegram/service"
 	"net/http"
 )
 
 var bot telegram.BotInterface = telegram.Bot{}
+var logService service.LogService
 
 func Webhook(w http.ResponseWriter, r *http.Request) {
 	var telegramUpdate entity.TelegramUpdate
@@ -18,6 +20,7 @@ func Webhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go logService.LoggingFromUpdateEntity(telegramUpdate)
 	command.Handle(telegramUpdate)
 }
 

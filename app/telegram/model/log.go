@@ -1,7 +1,10 @@
 package model
 
+import "gorm.io/gorm"
+
 type Log struct {
-	ID         uint64 `gorm:"primaryKey;autoIncrement:true;column=id"`
+	gorm.Model
 	TelegramId int    `gorm:"null;column=telegram_id"`
-	NextAction string `gorm:"null;column=next_action"`
+	IsBot      bool   `gorm:"default=false;column=is_bot"`
+	Payload    string `gorm:"null;column=payload"`
 }

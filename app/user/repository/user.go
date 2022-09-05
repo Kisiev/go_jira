@@ -6,9 +6,15 @@ import (
 )
 
 func FindOrCreate(user *model.User) {
+	nextAction := user.NextAction
+
 	if config.DbConnection().Where("telegram_id = ?", user.TelegramId).Find(&user).RowsAffected == 0 {
 		Save(user)
+		return
 	}
+	
+	user.NextAction = nextAction
+	Save(user)
 }
 
 func Save(user *model.User) {

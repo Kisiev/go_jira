@@ -6,7 +6,11 @@ import (
 	"io"
 	"log"
 	"main/helper"
+	"main/telegram/model"
+	"main/telegram/repository"
+	"main/telegram/service"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -17,6 +21,8 @@ type mail struct {
 	Text      string `json:"text"`
 	ParseMode string `json:"parse_mode"`
 }
+
+var logService service.LogService
 
 func getUrl() string {
 	botApiKey := helper.GetEnv("TELEGRAM_BOT", "")
@@ -34,6 +40,14 @@ func (b Bot) SimpleSendMessage(message string, userId string) {
 
 	payloadData, _ := json.Marshal(mail{ChatId: userId, Text: message, ParseMode: "html"})
 	payload := strings.NewReader(string(payloadData))
+	user, err := strconv.Atoi(userId)
+
+	if err != nil {
+		return
+	}
+
+	logItem := model.Log{IsBot: true, TelegramId: user, Payload: string(payloadData)}
+	repository.Create(&logItem)
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)

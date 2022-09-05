@@ -16,7 +16,7 @@ func handleRequest() {
 	http.HandleFunc("/telegram/setWebhook", controller.SetWebhook)
 	http.HandleFunc("/telegram/webhook", controller.Webhook)
 	http.HandleFunc("/telegram/getWebhook", controller.GetWebhook)
-	err := http.ListenAndServe(":4444", nil)
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)
 	}

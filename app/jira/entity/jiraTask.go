@@ -1,5 +1,7 @@
 package entity
 
+import "main/helper"
+
 type JiraTask struct {
 	Expand     string   `json:"expand"`
 	StartAt    int      `json:"startAt"`
@@ -64,5 +66,5 @@ type Issues struct {
 }
 
 func (i *Issues) GetUrl() string {
-	return "https://jira.dev-og.com/browse/" + i.Key
+	return helper.GetEnv("JIRA_URL", "") + "/browse/" + i.Key
 }

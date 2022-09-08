@@ -2,6 +2,7 @@ package formatter
 
 import (
 	"main/jira/entity"
+	"main/jira/model"
 )
 
 type FormattedTasks struct {
@@ -12,5 +13,5 @@ type FormattedTasks struct {
 }
 
 type Formatter interface {
-	Format(task entity.JiraTask) []entity.Task
+	Format(task entity.JiraTask) []model.Task
 }

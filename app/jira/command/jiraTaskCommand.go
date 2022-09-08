@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"main/jira"
 	taskFormatter "main/jira/formatter"
 	"main/jira/repository"
 	"main/telegram"
@@ -18,15 +17,11 @@ func (u JiraTaskCommand) Run(update telegramEntity.TelegramUpdate) {
 	telegramMessage := update.Message
 	user := repository.FindJiraUserByTelegramId(telegramMessage.From.Id)
 
-	rawJiraFilter := fmt.Sprintf("project = TRACEWAY and assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY priority DESC, created DESC", user.UserName)
-	jiraData := jira.GetTasksForUser(rawJiraFilter)
-
-	var formatter taskFormatter.Formatter = taskFormatter.JiraFormatter{}
-	data := formatter.Format(jiraData)
+	tasks := repository.GetUserTask(int64(user.UserID))
 
 	var message string
 
-	for _, item := range data {
+	for _, item := range tasks {
 		message += taskFormatter.FormatMessage(item)
 	}
 

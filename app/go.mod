@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/lib/pq v1.10.6
+	github.com/robfig/cron v1.2.0
 	gorm.io/driver/postgres v1.3.9
 	gorm.io/gorm v1.23.8
 )

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"main/config"
+	jiraModel "main/jira/model"
 	"main/user/model"
 )
 
@@ -15,4 +16,35 @@ func FindJiraUserByTelegramId(telegramId int) model.JiraUser {
 	var user model.JiraUser
 	config.DbConnection().Model(model.JiraUser{}).Joins("join users on users.id = jira_users.user_id").Where("users.telegram_id = ?", telegramId).First(&user)
 	return user
+}
+
+func JiraUserList() []model.JiraUser {
+	var users []model.JiraUser
+	config.DbConnection().Model(model.JiraUser{}).
+		Joins("join users on users.id = jira_users.user_id").
+		Preload("User").
+		Find(&users)
+	return users
+}
+
+func CheckIfExist(task *jiraModel.Task) int64 {
+	return config.DbConnection().Where("user_id = ? AND url = ?", task.UserId, task.Url).First(&task).RowsAffected
+}
+
+func CreateIfNotExistTask(task *jiraModel.Task) {
+	if config.DbConnection().Model(&task).
+		Where("user_id = ? AND url = ?", task.UserId, task.Url).
+		Updates(&task).RowsAffected == 0 {
+		config.DbConnection().Create(&task)
+	}
+}
+
+func GetUserTask(userId int64) []jiraModel.Task {
+	var tasks []jiraModel.Task
+	config.DbConnection().Where("user_id = ?", userId).Find(&tasks)
+	return tasks
+}
+
+func DeleteTasksWithout(userId int, ids []int) {
+	config.DbConnection().Where("id not in (?) and user_id = ?", ids, userId).Delete(jiraModel.Task{})
 }

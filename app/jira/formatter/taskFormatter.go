@@ -2,16 +2,17 @@ package formatter
 
 import (
 	"main/jira/entity"
+	"main/jira/model"
 )
 
 type JiraFormatter struct{}
 
-func (f JiraFormatter) Format(task entity.JiraTask) []entity.Task {
+func (f JiraFormatter) Format(task entity.JiraTask) []model.Task {
 
-	var tasks []entity.Task
+	var tasks []model.Task
 
 	for _, item := range task.Issues {
-		task := entity.Task{
+		task := model.Task{
 			Url:      item.GetUrl(),
 			Priority: mapPriority(item.Fields.Priority.Name),
 			Title:    item.Fields.Summary,

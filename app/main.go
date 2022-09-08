@@ -1,14 +1,28 @@
 package main
 
 import (
+	"github.com/robfig/cron"
 	"log"
+	cronCommand "main/jira/cron"
 	"main/telegram/controller"
 	"net/http"
 	"time"
 )
 
 func main() {
+	go cronItems()
 	handleRequest()
+}
+
+func cronItems() {
+	item := cron.New()
+	err := item.AddFunc("@every 1m", func() {
+		cronCommand.Run()
+	})
+	if err != nil {
+		return
+	}
+	item.Run()
 }
 
 func handleRequest() {
@@ -16,7 +30,7 @@ func handleRequest() {
 	http.HandleFunc("/telegram/setWebhook", controller.SetWebhook)
 	http.HandleFunc("/telegram/webhook", controller.Webhook)
 	http.HandleFunc("/telegram/getWebhook", controller.GetWebhook)
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":1111", nil)
 	if err != nil {
 		log.Fatal(err)
 	}

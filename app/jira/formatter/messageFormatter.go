@@ -2,10 +2,10 @@ package formatter
 
 import (
 	"fmt"
-	"main/jira/entity"
+	"main/jira/model"
 )
 
-func FormatMessage(task entity.Task) string {
+func FormatMessage(task model.Task) string {
 	return fmt.Sprintf("📚\t<b>Задача</b>: %s\n📎\t<b>Ссылка</b>: %s\n⚡️\t<b>Приоритет</b>: %s\n⚠️\t<b>Статус</b>: %s\n\n", task.Title, task.Url, priorityFormat(task.Priority), task.Status)
 }
 

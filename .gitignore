@@ -1,3 +1,5 @@
 .env
 .idea
 logs/*
+/app/key.pem
+/app/cert.pem

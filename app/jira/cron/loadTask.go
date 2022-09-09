@@ -17,7 +17,7 @@ func Run() {
 	users := repository.JiraUserList()
 
 	for _, user := range users {
-		updateTasksForUserAndNotify(user)
+		go updateTasksForUserAndNotify(user)
 	}
 }
 

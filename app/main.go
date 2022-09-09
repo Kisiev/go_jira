@@ -16,7 +16,7 @@ func main() {
 
 func cronItems() {
 	item := cron.New()
-	err := item.AddFunc("@every 1m", func() {
+	err := item.AddFunc("@every 5m", func() {
 		cronCommand.Run()
 	})
 	if err != nil {

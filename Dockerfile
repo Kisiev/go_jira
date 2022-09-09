@@ -36,7 +36,7 @@ RUN curl -OL https://golang.org/dl/go1.17.linux-arm64.tar.gz; mkdir /etc/golang;
 RUN go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest; ln -s /root/go/bin/jb /usr/bin/jb
 
 # Expose port 8080 to the outside world
-EXPOSE 8080
+EXPOSE 8080 433
 
 #Command to run the executable
 CMD ["/root/main"]

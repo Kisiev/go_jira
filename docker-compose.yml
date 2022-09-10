@@ -18,6 +18,9 @@ services:
       - JIRA_USER=${JIRA_USER}
       - JIRA_PASS=${JIRA_PASS}
       - TELEGRAM_ID=${TELEGRAM_ID}
+      - DOMAIN=${DOMAIN}
+      - CERT_PATH=${CERT_PATH}
+      - KEY_PATH=${KEY_PATH}
     tty: true
     build: .
     ports:

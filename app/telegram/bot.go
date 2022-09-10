@@ -66,7 +66,7 @@ func (b Bot) SimpleSendMessage(message string, userId string) {
 
 func (b Bot) SetWebhook(url string) []byte {
 	if len(url) == 0 {
-		url = "https://." + helper.GetEnv("DOMAIN", "") + "/telegram/webhook"
+		url = "https://" + helper.GetEnv("DOMAIN", "") + "/telegram/webhook"
 	}
 
 	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
@@ -75,7 +75,7 @@ func (b Bot) SetWebhook(url string) []byte {
 		return nil
 	}
 
-	req, err := botApi.SetWebhook(tgbotapi.NewWebhookWithCert(url, "cert.pem"))
+	req, err := botApi.SetWebhook(tgbotapi.NewWebhookWithCert(url, helper.GetEnv("CERT_PATH", "cert.pem")))
 	if err != nil {
 		log.Println(err)
 	}

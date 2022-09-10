@@ -27,7 +27,7 @@ func JiraUserList() []model.JiraUser {
 	return users
 }
 
-func CheckIfExist(task *jiraModel.Task) int64 {
+func CheckIfExist(task jiraModel.Task) int64 {
 	return config.DbConnection().Where("user_id = ? AND url = ?", task.UserId, task.Url).First(&task).RowsAffected
 }
 
@@ -45,6 +45,6 @@ func GetUserTask(userId int64) []jiraModel.Task {
 	return tasks
 }
 
-func DeleteTasksWithout(userId int, ids []int) {
-	config.DbConnection().Where("id not in (?) and user_id = ?", ids, userId).Delete(jiraModel.Task{})
+func DeleteTasksWithout(userId int, urls []string) {
+	config.DbConnection().Where("url not in (?) and user_id = ?", urls, userId).Delete(jiraModel.Task{})
 }

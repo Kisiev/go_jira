@@ -29,20 +29,19 @@ func updateTasksForUserAndNotify(user userModule.JiraUser) {
 	data := formatter.Format(jiraData)
 
 	var message string
-	var deletingTaskIds []int
+	var notDeletingTaskUrls []string
 	for _, item := range data {
 		newTask := model.Task{Title: item.Title, Url: item.Url, Priority: item.Priority, Status: item.Status, UserId: user.UserID}
-		if repository.CheckIfExist(&newTask) == 0 {
-			repository.CreateIfNotExistTask(&newTask)
+		if repository.CheckIfExist(newTask) == 0 {
 			message += taskFormatter.FormatMessage(newTask)
 		}
-
-		deletingTaskIds = append(deletingTaskIds, int(newTask.ID))
+		repository.CreateIfNotExistTask(&newTask)
+		notDeletingTaskUrls = append(notDeletingTaskUrls, newTask.Url)
 	}
 
-	repository.DeleteTasksWithout(int(user.UserID), deletingTaskIds)
+	repository.DeleteTasksWithout(user.UserID, notDeletingTaskUrls)
 
 	if len(message) != 0 {
-		go bot.SimpleSendMessage("Новые задачи\n\n"+message, strconv.Itoa(user.User.TelegramId))
+		bot.SimpleSendMessage("Новые задачи\n\n"+message, strconv.Itoa(user.User.TelegramId))
 	}
 }

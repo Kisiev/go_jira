@@ -12,7 +12,7 @@ import (
 	userModel "main/user/model"
 )
 
-func InitDb() *gorm.DB {
+func getDb() *gorm.DB {
 	connectionString := fmt.Sprintf("%s://%s:%s@%s:%s/%s",
 		helper.GetEnv("DB_CONNECTION", "postgres"),
 		helper.GetEnv("DB_USERNAME", "test"),
@@ -28,18 +28,18 @@ func InitDb() *gorm.DB {
 		log.Fatal("Cannot connect to database")
 	}
 
-	err = conn.AutoMigrate(&userModel.User{})
-	err = conn.AutoMigrate(&userModel.JiraUser{})
-	err = conn.AutoMigrate(&model.Log{})
-	err = conn.AutoMigrate(&jiraModel.Task{})
-
-	if err != nil {
-		log.Fatal("Cannot migrate")
-	}
-
 	return conn
 }
 
+func InitDb() {
+	conn := getDb()
+
+	conn.AutoMigrate(&userModel.User{})
+	conn.AutoMigrate(&userModel.JiraUser{})
+	conn.AutoMigrate(&model.Log{})
+	conn.AutoMigrate(&jiraModel.Task{})
+}
+
 func DbConnection() *gorm.DB {
-	return InitDb()
+	return getDb()
 }

@@ -3,6 +3,7 @@ package telegram
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/telegram-bot-api.v4"
 	"io"
 	"log"
 	"main/helper"
@@ -64,26 +65,21 @@ func (b Bot) SimpleSendMessage(message string, userId string) {
 }
 
 func (b Bot) SetWebhook(url string) []byte {
-	requestUrl := fmt.Sprintf("%s/bot%s/setWebhook?url=%s",
-		helper.GetEnv("TELEGRAM_URL", ""),
-		helper.GetEnv("TELEGRAM_BOT", ""),
-		url,
-	)
-
-	response, err := http.Get(requestUrl)
-
-	if err != nil {
-		log.Fatal(err)
+	if len(url) == 0 {
+		url = "https://." + helper.GetEnv("DOMAIN", "") + "/telegram/webhook"
 	}
 
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
 	if err != nil {
+		log.Println(err)
 		return nil
 	}
 
-	return body
+	req, err := botApi.SetWebhook(tgbotapi.NewWebhookWithCert(url, "cert.pem"))
+	if err != nil {
+		log.Println(err)
+	}
+	return req.Result
 }
 
 func (b Bot) GetWebhookInfo() []byte {

@@ -14,7 +14,7 @@ func CreateJiraUser(user model.JiraUser) {
 
 func FindJiraUserByTelegramId(telegramId int) model.JiraUser {
 	var user model.JiraUser
-	config.DbConnection().Model(model.JiraUser{}).Joins("join users on users.id = jira_users.user_id").Where("users.telegram_id = ?", telegramId).First(&user)
+	config.DbConnection().Model(model.JiraUser{}).Preload("User").Joins("join users on users.id = jira_users.user_id").Where("users.telegram_id = ?", telegramId).First(&user)
 	return user
 }
 
@@ -41,7 +41,7 @@ func CreateIfNotExistTask(task *jiraModel.Task) {
 
 func GetUserTask(userId int64) []jiraModel.Task {
 	var tasks []jiraModel.Task
-	config.DbConnection().Where("user_id = ?", userId).Find(&tasks)
+	config.DbConnection().Order("priority desc").Where("user_id = ?", userId).Find(&tasks)
 	return tasks
 }
 

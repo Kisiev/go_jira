@@ -33,6 +33,7 @@ func tryHandle(command string, update entity.TelegramUpdate) bool {
 		constant.ActionSetJiraUserName: jiraCommand.UserCreateCommand{},
 		constant.ActionTaskView:        jiraCommand.JiraTaskCommand{},
 		constant.ActionReport:          jiraCommand.JiraReportCommand{},
+		constant.ActionWorkLog:         jiraCommand.JiraWorkLogCommand{},
 	}
 
 	if commandMap, found := commandMap[command]; found {

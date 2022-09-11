@@ -1,5 +1,7 @@
 package model
 
+import "main/user/model"
+
 type Task struct {
 	ID       uint64 `gorm:"primaryKey;autoIncrement:true;column=id"`
 	Title    string `json:"title"`
@@ -7,4 +9,5 @@ type Task struct {
 	Priority int    `json:"priority"`
 	Status   string `json:"status"`
 	UserId   int    `json:"user_id"`
+	User     model.User
 }

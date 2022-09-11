@@ -35,6 +35,7 @@ func GetTasksForUser(filter string) entity.JiraTask {
 			"priority",
 			"issuetype",
 			"timetracking",
+			"worklog",
 		},
 	}
 

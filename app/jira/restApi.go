@@ -35,7 +35,6 @@ func GetTasksForUser(filter string) entity.JiraTask {
 			"priority",
 			"issuetype",
 			"timetracking",
-			"worklog",
 		},
 	}
 
@@ -75,6 +74,41 @@ func GetTasksForUser(filter string) entity.JiraTask {
 	}
 
 	return task
+}
+
+func GetTaskWorkLog(issueIdOrKey string) entity.WorkLog {
+	var workLog entity.WorkLog
+
+	url := helper.GetEnv("JIRA_URL", "") + "/rest/api/2/issue/" + issueIdOrKey + "/worklog"
+	method := "GET"
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Basic "+basicAuth(helper.GetEnv("JIRA_USER", ""), helper.GetEnv("JIRA_PASS", "")))
+
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal(body, &workLog)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return workLog
 }
 
 func basicAuth(username, password string) string {

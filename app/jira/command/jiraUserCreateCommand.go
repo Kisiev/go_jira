@@ -2,6 +2,7 @@ package command
 
 import (
 	"encoding/json"
+	"main/jira"
 	jiraRepository "main/jira/repository"
 	"main/jira/validator"
 	"main/telegram"
@@ -34,6 +35,8 @@ func (u UserCreateCommand) Run(update entity.TelegramUpdate) {
 	nextActionStr, err := json.Marshal(model.NextAction{})
 	user.NextAction = string(nextActionStr)
 	userRepository.Save(&user)
+
+	jira.LoadAndGetNewTasks(jiraUser)
 
 	go bot.SimpleSendMessage("Пользователь добавлен", strconv.Itoa(user.TelegramId))
 }

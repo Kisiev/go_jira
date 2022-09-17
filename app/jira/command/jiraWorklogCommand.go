@@ -37,7 +37,8 @@ func (j JiraWorkLogCommand) Run(update telegramEntity.TelegramUpdate) {
 	userWorkLog = make(map[int64][]workLogData)
 
 	for _, task := range tasks.Issues {
-		for _, workLog := range task.Fields.WorkLog.WorkLogs {
+		workLog := jira.GetTaskWorkLog(task.Key)
+		for _, workLog := range workLog.WorkLogs {
 			if workLog.Author.Name != user.UserName {
 				continue
 			}

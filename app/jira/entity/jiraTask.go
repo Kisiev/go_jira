@@ -62,53 +62,55 @@ type Issues struct {
 				Name      string `json:"name"`
 			} `json:"statusCategory"`
 		} `json:"status"`
-		WorkLog struct {
-			StartAt    int `json:"startAt"`
-			MaxResults int `json:"maxResults"`
-			Total      int `json:"total"`
-			WorkLogs   []struct {
-				Self   string `json:"self"`
-				Author struct {
-					Self         string `json:"self"`
-					Name         string `json:"name"`
-					Key          string `json:"key"`
-					EmailAddress string `json:"emailAddress"`
-					AvatarUrls   struct {
-						Four8X48  string `json:"48x48"`
-						Two4X24   string `json:"24x24"`
-						One6X16   string `json:"16x16"`
-						Three2X32 string `json:"32x32"`
-					} `json:"avatarUrls"`
-					DisplayName string `json:"displayName"`
-					Active      bool   `json:"active"`
-					TimeZone    string `json:"timeZone"`
-				} `json:"author"`
-				UpdateAuthor struct {
-					Self         string `json:"self"`
-					Name         string `json:"name"`
-					Key          string `json:"key"`
-					EmailAddress string `json:"emailAddress"`
-					AvatarUrls   struct {
-						Four8X48  string `json:"48x48"`
-						Two4X24   string `json:"24x24"`
-						One6X16   string `json:"16x16"`
-						Three2X32 string `json:"32x32"`
-					} `json:"avatarUrls"`
-					DisplayName string `json:"displayName"`
-					Active      bool   `json:"active"`
-					TimeZone    string `json:"timeZone"`
-				} `json:"updateAuthor"`
-				Comment          string `json:"comment"`
-				Created          string `json:"created"`
-				Updated          string `json:"updated"`
-				Started          string `json:"started"`
-				TimeSpent        string `json:"timeSpent"`
-				TimeSpentSeconds int    `json:"timeSpentSeconds"`
-				ID               string `json:"id"`
-				IssueID          string `json:"issueId"`
-			} `json:"worklogs"`
-		} `json:"worklog"`
+		WorkLog WorkLog `json:"worklog"`
 	} `json:"fields"`
+}
+
+type WorkLog struct {
+	StartAt    int `json:"startAt"`
+	MaxResults int `json:"maxResults"`
+	Total      int `json:"total"`
+	WorkLogs   []struct {
+		Self   string `json:"self"`
+		Author struct {
+			Self         string `json:"self"`
+			Name         string `json:"name"`
+			Key          string `json:"key"`
+			EmailAddress string `json:"emailAddress"`
+			AvatarUrls   struct {
+				Four8X48  string `json:"48x48"`
+				Two4X24   string `json:"24x24"`
+				One6X16   string `json:"16x16"`
+				Three2X32 string `json:"32x32"`
+			} `json:"avatarUrls"`
+			DisplayName string `json:"displayName"`
+			Active      bool   `json:"active"`
+			TimeZone    string `json:"timeZone"`
+		} `json:"author"`
+		UpdateAuthor struct {
+			Self         string `json:"self"`
+			Name         string `json:"name"`
+			Key          string `json:"key"`
+			EmailAddress string `json:"emailAddress"`
+			AvatarUrls   struct {
+				Four8X48  string `json:"48x48"`
+				Two4X24   string `json:"24x24"`
+				One6X16   string `json:"16x16"`
+				Three2X32 string `json:"32x32"`
+			} `json:"avatarUrls"`
+			DisplayName string `json:"displayName"`
+			Active      bool   `json:"active"`
+			TimeZone    string `json:"timeZone"`
+		} `json:"updateAuthor"`
+		Comment          string `json:"comment"`
+		Created          string `json:"created"`
+		Updated          string `json:"updated"`
+		Started          string `json:"started"`
+		TimeSpent        string `json:"timeSpent"`
+		TimeSpentSeconds int    `json:"timeSpentSeconds"`
+		ID               string `json:"id"`
+		IssueID          string `json:"issueId"`
+	} `json:"worklogs"`
 }
 
 func (i *Issues) GetUrl() string {

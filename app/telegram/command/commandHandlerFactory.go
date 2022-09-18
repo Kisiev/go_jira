@@ -2,7 +2,7 @@ package command
 
 import (
 	"encoding/json"
-	fileCommand "main/File/command"
+	fileCommand "main/file/command"
 	jiraCommand "main/jira/command"
 	"main/telegram/constant"
 	"main/telegram/entity"

@@ -4,6 +4,7 @@ import (
 	"github.com/robfig/cron"
 	"log"
 	"main/config"
+	"main/helper"
 	cronCommand "main/jira/cron"
 	"main/telegram"
 	"main/telegram/controller"
@@ -13,7 +14,7 @@ import (
 
 func main() {
 	config.InitDb()
-	//setWebhook()
+	setWebhook()
 	go cronItems()
 	handleRequest()
 }
@@ -39,12 +40,12 @@ func handleRequest() {
 	http.HandleFunc("/telegram/setWebhook", controller.SetWebhook)
 	http.HandleFunc("/telegram/webhook", controller.Webhook)
 	http.HandleFunc("/telegram/getWebhook", controller.GetWebhook)
-	err := http.ListenAndServe(":8081", nil)
-	//err := http.ListenAndServeTLS(":443",
-	//	helper.GetEnv("CERT_PATH", "cert.pem"),
-	//	helper.GetEnv("KEY_PATH", "key.pem"),
-	//	nil,
-	//)
+	//err := http.ListenAndServe(":8081", nil)
+	err := http.ListenAndServeTLS(":443",
+		helper.GetEnv("CERT_PATH", "cert.pem"),
+		helper.GetEnv("KEY_PATH", "key.pem"),
+		nil,
+	)
 	if err != nil {
 		log.Fatal(err)
 	}

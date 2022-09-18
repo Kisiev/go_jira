@@ -12,9 +12,8 @@ import (
 
 type StartCommand struct{}
 
-var bot telegram.BotInterface = telegram.Bot{}
-
 func (s StartCommand) Run(update entity.TelegramUpdate) {
+	var bot telegram.BotInterface = telegram.Bot{}
 	message := update.Message
 
 	fullName := message.From.FirstName + " " + message.From.LastName

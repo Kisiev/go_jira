@@ -21,6 +21,7 @@ services:
       - DOMAIN=${DOMAIN}
       - CERT_PATH=${CERT_PATH}
       - KEY_PATH=${KEY_PATH}
+      - FILES_PATH=${FILES_PATH}
     tty: true
     build: .
     ports:

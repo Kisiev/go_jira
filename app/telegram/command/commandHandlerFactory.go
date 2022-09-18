@@ -2,11 +2,13 @@ package command
 
 import (
 	"encoding/json"
+	fileCommand "main/File/command"
 	jiraCommand "main/jira/command"
 	"main/telegram/constant"
 	"main/telegram/entity"
 	"main/user/model"
 	"main/user/repository"
+	"regexp"
 )
 
 func Handle(update entity.TelegramUpdate) {
@@ -25,6 +27,29 @@ func Handle(update entity.TelegramUpdate) {
 	if tryHandle(nextAction.Action, update) {
 		return
 	}
+
+	if tryHandleWithRegex(update.Message.Text, update) {
+		return
+	}
+}
+
+func tryHandleWithRegex(command string, update entity.TelegramUpdate) bool {
+	var commandMap = map[string]Command{
+		constant.ActionLinkToPicture: fileCommand.UploadCommand{},
+	}
+
+	for regEx, handler := range commandMap {
+		compile, err := regexp.Compile(regEx)
+		if err != nil {
+			return false
+		}
+
+		if compile.MatchString(command) {
+			handler.Run(update)
+		}
+	}
+
+	return false
 }
 
 func tryHandle(command string, update entity.TelegramUpdate) bool {
@@ -34,6 +59,7 @@ func tryHandle(command string, update entity.TelegramUpdate) bool {
 		constant.ActionTaskView:        jiraCommand.JiraTaskCommand{},
 		constant.ActionReport:          jiraCommand.JiraReportCommand{},
 		constant.ActionWorkLog:         jiraCommand.JiraWorkLogCommand{},
+		constant.ActionRandPicture:     RandomFileCommand{},
 	}
 
 	if commandMap, found := commandMap[command]; found {

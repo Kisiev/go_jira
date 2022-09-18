@@ -3,6 +3,7 @@ module main
 go 1.18
 
 require (
+	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/lib/pq v1.10.6
 	github.com/robfig/cron v1.2.0
 	gopkg.in/telegram-bot-api.v4 v4.6.4

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gopkg.in/telegram-bot-api.v4"
 	"io"
+	"io/ioutil"
 	"log"
 	"main/helper"
 	"main/telegram/model"
@@ -21,6 +22,11 @@ type mail struct {
 	ChatId    string `json:"chat_id"`
 	Text      string `json:"text"`
 	ParseMode string `json:"parse_mode"`
+}
+
+type photoMail struct {
+	ChatId string `json:"chat_id"`
+	Photo  string `json:"text"`
 }
 
 var logService service.LogService
@@ -62,6 +68,28 @@ func (b Bot) SimpleSendMessage(message string, userId string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (b Bot) SendPhoto(photoPath, userId string) {
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
+	if err != nil {
+		return
+	}
+
+	photoBytes, err := ioutil.ReadFile(photoPath)
+	if err != nil {
+		panic(err)
+	}
+	photoFileBytes := tgbotapi.FileBytes{
+		Name:  "picture",
+		Bytes: photoBytes,
+	}
+
+	chatId, err := strconv.Atoi(userId)
+	if err != nil {
+		return
+	}
+	_, err = botApi.Send(tgbotapi.NewPhotoUpload(int64(chatId), photoFileBytes))
 }
 
 func (b Bot) SetWebhook(url string) []byte {

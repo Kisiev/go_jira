@@ -3,4 +3,3 @@
 logs/*
 /app/key.pem
 /app/cert.pem
-/app/files

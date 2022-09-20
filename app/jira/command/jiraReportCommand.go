@@ -24,11 +24,11 @@ func (j JiraReportCommand) Run(update telegramEntity.TelegramUpdate) {
 
 	yesterdayChan = make(chan entity.JiraTask)
 	dateStart, dateEnd := getPrevDate()
-	rawJiraFilter := fmt.Sprintf("project = TRACEWAY and worklogDate >= '%s' and worklogDate < '%s' and worklogAuthor = %s ORDER BY priority DESC, created DESC", dateStart, dateEnd, user.UserName)
+	rawJiraFilter := fmt.Sprintf("worklogDate >= '%s' and worklogDate < '%s' and worklogAuthor = %s ORDER BY priority DESC, created DESC", dateStart, dateEnd, user.UserName)
 	go getYesterdayTasks(rawJiraFilter, yesterdayChan)
 
 	todayChan = make(chan entity.JiraTask)
-	rawJiraFilter = fmt.Sprintf("project = TRACEWAY and assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY priority DESC, created DESC", user.UserName)
+	rawJiraFilter = fmt.Sprintf("assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY priority DESC, created DESC", user.UserName)
 	go getTodayTasks(rawJiraFilter, todayChan)
 
 	message := formatReport(<-yesterdayChan, <-todayChan)

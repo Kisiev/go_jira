@@ -9,7 +9,7 @@ import (
 )
 
 func LoadAndGetNewTasks(user userModule.JiraUser) string {
-	rawJiraFilter := fmt.Sprintf("project = TRACEWAY and assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY priority DESC, created DESC", user.UserName)
+	rawJiraFilter := fmt.Sprintf("assignee=%s and status not in (Закрыто, Выполнено, Done, CLOSED, Canceled) ORDER BY priority DESC, created DESC", user.UserName)
 	jiraData := GetTasksForUser(rawJiraFilter)
 
 	var formatter taskFormatter.Formatter = taskFormatter.JiraFormatter{}

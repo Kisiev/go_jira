@@ -31,7 +31,7 @@ func (j JiraWorkLogCommand) Run(update telegramEntity.TelegramUpdate) {
 	dateStart := time.Now().AddDate(0, 0, -10).Format("2006-01-02")
 	dateEnd := time.Now().AddDate(0, 0, 2).Format("2006-01-02")
 
-	rawJiraFilter := fmt.Sprintf("project = TRACEWAY and worklogDate >= '%s' and worklogDate < '%s' and worklogAuthor = %s ORDER BY priority DESC, created DESC", dateStart, dateEnd, user.UserName)
+	rawJiraFilter := fmt.Sprintf("worklogDate >= '%s' and worklogDate < '%s' and worklogAuthor = %s ORDER BY priority DESC, created DESC", dateStart, dateEnd, user.UserName)
 	tasks := jira.GetTasksForUser(rawJiraFilter)
 
 	userWorkLog = make(map[int64][]workLogData)

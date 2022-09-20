@@ -32,7 +32,6 @@ services:
       - db
     volumes:
       - ./app:/usr/src/app/
-      - ./app/files:/usr/src/app/
     networks:
       - fullstack
   db:

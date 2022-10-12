@@ -2,7 +2,6 @@ package command
 
 import (
 	"io/ioutil"
-	"log"
 	"main/helper"
 	"main/telegram"
 	"main/telegram/entity"
@@ -18,7 +17,7 @@ func (s RandomFileCommand) Run(update entity.TelegramUpdate) {
 
 	files, err := ioutil.ReadDir(helper.GetEnv("FILES_PATH", ""))
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
 	fileCount := len(files)

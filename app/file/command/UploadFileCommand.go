@@ -21,15 +21,27 @@ func (s UploadCommand) Run(update entity.TelegramUpdate) {
 	fileName, _ := uuid.NewV4()
 	fullPath := fmt.Sprintf("%s%s.png", helper.GetEnv("FILES_PATH", ""), fileName.String())
 
-	os.MkdirAll(helper.GetEnv("FILES_PATH", ""), 0750)
-	img, _ := os.Create(fullPath)
+	img, err := os.Open(helper.GetEnv("FILES_PATH", ""))
+
+	if err != nil {
+		err = os.MkdirAll(helper.GetEnv("FILES_PATH", ""), 0750)
+		if err != nil {
+			return
+		}
+	}
+
+	img, err = os.Create(fullPath)
+
+	if err != nil {
+		return
+	}
 
 	defer img.Close()
 
 	resp, _ := http.Get(telegramMessage.Text)
 	defer resp.Body.Close()
 
-	_, err := io.Copy(img, resp.Body)
+	_, err = io.Copy(img, resp.Body)
 	if err != nil {
 		return
 	}

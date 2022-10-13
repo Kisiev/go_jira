@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type UploadCommand struct{}
@@ -18,33 +19,42 @@ func (s UploadCommand) Run(update entity.TelegramUpdate) {
 	var bot telegram.BotInterface = telegram.Bot{}
 	telegramMessage := update.Message
 
-	fileName, _ := uuid.NewV4()
-	fullPath := fmt.Sprintf("%s%s.png", helper.GetEnv("FILES_PATH", ""), fileName.String())
+	urls := strings.Split(telegramMessage.Text, "\n")
+	var savedPictures int
 
-	img, err := os.Open(helper.GetEnv("FILES_PATH", ""))
+	for _, url := range urls {
+		url = strings.TrimSpace(url)
 
-	if err != nil {
-		err = os.MkdirAll(helper.GetEnv("FILES_PATH", ""), 0750)
+		fileName, _ := uuid.NewV4()
+		fullPath := fmt.Sprintf("%s%s.png", helper.GetEnv("FILES_PATH", ""), fileName.String())
+
+		img, err := os.Open(helper.GetEnv("FILES_PATH", ""))
+
+		if err != nil {
+			err = os.MkdirAll(helper.GetEnv("FILES_PATH", ""), 0750)
+			if err != nil {
+				return
+			}
+		}
+
+		img, err = os.Create(fullPath)
+
 		if err != nil {
 			return
 		}
+
+		resp, _ := http.Get(url)
+
+		_, err = io.Copy(img, resp.Body)
+		if err != nil {
+			continue
+		}
+
+		img.Close()
+		resp.Body.Close()
+
+		savedPictures++
 	}
 
-	img, err = os.Create(fullPath)
-
-	if err != nil {
-		return
-	}
-
-	defer img.Close()
-
-	resp, _ := http.Get(telegramMessage.Text)
-	defer resp.Body.Close()
-
-	_, err = io.Copy(img, resp.Body)
-	if err != nil {
-		return
-	}
-
-	bot.SendPhoto(fullPath, strconv.Itoa(update.Message.From.Id))
+	bot.SimpleSendMessage(fmt.Sprintf("Сохранено картинок %d", savedPictures), strconv.Itoa(update.Message.From.Id))
 }

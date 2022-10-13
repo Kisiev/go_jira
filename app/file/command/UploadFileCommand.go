@@ -40,10 +40,14 @@ func (s UploadCommand) Run(update entity.TelegramUpdate) {
 		img, err = os.Create(fullPath)
 
 		if err != nil {
-			return
+			continue
 		}
 
-		resp, _ := http.Get(url)
+		resp, err := http.Get(url)
+
+		if err != nil {
+			continue
+		}
 
 		_, err = io.Copy(img, resp.Body)
 		if err != nil {

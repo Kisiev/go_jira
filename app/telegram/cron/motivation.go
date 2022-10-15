@@ -25,7 +25,7 @@ func Motivate() {
 		}
 
 		var motivation []model.Motivation
-		config.DbConnection().Model(model.Motivation{}).Find(&motivation)
+		config.DbConnection().Model(model.Motivation{}).Where("is_active = ?", true).Find(&motivation)
 
 		if len(motivation) == 0 {
 			return

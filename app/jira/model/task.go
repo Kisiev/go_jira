@@ -3,7 +3,7 @@ package model
 import "main/user/model"
 
 type Task struct {
-	ID       uint64 `gorm:"primaryKey;autoIncrement:true;column=id"`
+	ID       uint64 `gorm:"primaryKey;autoIncrement:true;column:id"`
 	Title    string `json:"title"`
 	Url      string `json:"url"`
 	Priority int    `json:"priority"`

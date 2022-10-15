@@ -1,10 +1,10 @@
 package model
 
 type User struct {
-	ID         uint64 `gorm:"primaryKey;autoIncrement:true;column=id"`
-	Name       string `gorm:"not null;column=name"`
-	TelegramId int    `gorm:"null;column=telegram_id"`
-	NextAction string `gorm:"null;column=next_action"`
+	ID         uint64 `gorm:"primaryKey;autoIncrement:true;column:id"`
+	Name       string `gorm:"not null;column:name"`
+	TelegramId int    `gorm:"null;column:telegram_id"`
+	NextAction string `gorm:"null;column:next_action"`
 }
 
 type JiraUser struct {

@@ -8,6 +8,7 @@ import (
 	cronCommand "main/jira/cron"
 	"main/telegram"
 	"main/telegram/controller"
+	telegramCron "main/telegram/cron"
 	"net/http"
 	"time"
 )
@@ -29,9 +30,19 @@ func cronItems() {
 	err := item.AddFunc("@every 5m", func() {
 		cronCommand.Run()
 	})
+
 	if err != nil {
 		return
 	}
+
+	err = item.AddFunc("00 08-17 * * 1-5", func() {
+		telegramCron.Motivate()
+	})
+
+	if err != nil {
+		return
+	}
+
 	item.Run()
 }
 

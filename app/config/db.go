@@ -38,6 +38,7 @@ func InitDb() {
 	conn.AutoMigrate(&userModel.JiraUser{})
 	conn.AutoMigrate(&model.Log{})
 	conn.AutoMigrate(&jiraModel.Task{})
+	conn.AutoMigrate(&model.Motivation{})
 }
 
 func DbConnection() *gorm.DB {

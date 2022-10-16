@@ -35,7 +35,7 @@ func cronItems() {
 		return
 	}
 
-	err = item.AddFunc("00 08-17 * * 1-5", func() {
+	err = item.AddFunc("00 11-18 * * 1-5", func() {
 		telegramCron.Motivate()
 	})
 

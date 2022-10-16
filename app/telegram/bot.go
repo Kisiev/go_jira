@@ -90,6 +90,10 @@ func (b Bot) SendPhoto(photoPath, userId string) {
 		return
 	}
 	_, err = botApi.Send(tgbotapi.NewPhotoUpload(int64(chatId), photoFileBytes))
+
+	payloadData, _ := json.Marshal(mail{ChatId: userId, Text: photoPath, ParseMode: "html"})
+	logItem := model.Log{IsBot: true, TelegramId: chatId, Payload: string(payloadData)}
+	repository.Create(&logItem)
 }
 
 func (b Bot) SetWebhook(url string) []byte {

@@ -22,6 +22,7 @@ services:
       - CERT_PATH=${CERT_PATH}
       - KEY_PATH=${KEY_PATH}
       - FILES_PATH=${FILES_PATH}
+      - TZ=Europe/Moscow
     tty: true
     build: .
     ports:

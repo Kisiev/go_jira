@@ -32,7 +32,8 @@ COPY --from=builder /app/.env .
 
 ENV GOPATH=/usr/src/app/
 # timezone env with default
-ENV TZ Europe/Moscow
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN curl -OL https://golang.org/dl/go1.17.linux-arm64.tar.gz; mkdir /etc/golang; tar -xvzf go1.17.linux-arm64.tar.gz -C /etc/golang; ln -s /etc/golang/go/bin/go /usr/bin/go; rm -f go1.17.linux-arm64.tar.gz
 RUN go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest; ln -s /root/go/bin/jb /usr/bin/jb

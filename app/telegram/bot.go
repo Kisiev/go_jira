@@ -60,13 +60,13 @@ func (b Bot) SimpleSendMessage(message string, userId string) {
 	req, err := http.NewRequest(method, url, payload)
 
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 	req.Header.Add("Content-Type", "application/json")
 
 	_, err = client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 }
 

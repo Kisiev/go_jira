@@ -10,7 +10,6 @@ import (
 	"main/telegram/controller"
 	telegramCron "main/telegram/cron"
 	"net/http"
-	"time"
 )
 
 func main() {
@@ -63,7 +62,5 @@ func handleRequest() {
 }
 
 func debug(w http.ResponseWriter, r *http.Request) {
-	dateStart := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
-	dateEnd := time.Now().Format("2006-01-02")
-	w.Write([]byte(dateStart + dateEnd))
+	telegramCron.Motivate()
 }

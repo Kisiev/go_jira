@@ -16,18 +16,17 @@ func Motivate() {
 
 	users := repository.JiraUserList()
 
-	for _, user := range users {
+	var motivation []model.Motivation
+	config.DbConnection().Model(model.Motivation{}).Where("is_active = ?", true).Find(&motivation)
 
+	if len(motivation) == 0 {
+		return
+	}
+
+	for _, user := range users {
 		filePath, err := file.GetRandomFilepath()
 
 		if err != nil {
-			return
-		}
-
-		var motivation []model.Motivation
-		config.DbConnection().Model(model.Motivation{}).Where("is_active = ?", true).Find(&motivation)
-
-		if len(motivation) == 0 {
 			return
 		}
 

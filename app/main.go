@@ -25,13 +25,25 @@ func setWebhook() {
 }
 
 func cronItems() {
-	cron.New().AddFunc("@every 5m", func() {
+	item := cron.New()
+
+	err := item.AddFunc("@every 5m", func() {
 		cronCommand.Run()
 	})
 
-	cron.New().AddFunc("00 11-18 * * 1-5", func() {
+	if err != nil {
+		return
+	}
+
+	err = item.AddFunc("00 11-18 * * 1-5", func() {
 		telegramCron.Motivate()
 	})
+
+	if err != nil {
+		return
+	}
+
+	item.Start()
 }
 
 func handleRequest() {

@@ -12,7 +12,7 @@ func FindOrCreate(user *model.User) {
 		Save(user)
 		return
 	}
-	
+
 	user.NextAction = nextAction
 	Save(user)
 }
@@ -29,4 +29,11 @@ func FindByTelegramId(telegramId int) model.User {
 	var user model.User
 	config.DbConnection().Find(&user, &model.User{TelegramId: telegramId})
 	return user
+}
+
+func GetUsers() []model.User {
+	var users []model.User
+	config.DbConnection().Model(model.User{}).
+		Find(&users)
+	return users
 }

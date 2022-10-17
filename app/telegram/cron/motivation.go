@@ -3,9 +3,9 @@ package cron
 import (
 	"main/config"
 	"main/file"
-	"main/jira/repository"
 	"main/telegram"
 	"main/telegram/model"
+	"main/user/repository"
 	"math/rand"
 	"strconv"
 	"time"
@@ -14,7 +14,7 @@ import (
 func Motivate() {
 	var bot telegram.BotInterface = telegram.Bot{}
 
-	users := repository.JiraUserList()
+	users := repository.GetUsers()
 
 	var motivation []model.Motivation
 	config.DbConnection().Model(model.Motivation{}).Where("is_active = ?", true).Find(&motivation)
@@ -35,7 +35,7 @@ func Motivate() {
 		max := len(motivation)
 		randomMotivationIndex := rand.Intn(max-min) + min
 
-		bot.SendPhoto(filePath, strconv.Itoa(user.User.TelegramId))
-		bot.SimpleSendMessage(motivation[randomMotivationIndex].Title, strconv.Itoa(user.User.TelegramId))
+		bot.SendPhoto(filePath, strconv.Itoa(user.TelegramId))
+		bot.SimpleSendMessage(motivation[randomMotivationIndex].Title, strconv.Itoa(user.TelegramId))
 	}
 }

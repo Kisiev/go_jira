@@ -7,4 +7,4 @@ const ActionReport = "/report"
 const ActionWorkLog = "/worklog"
 const ActionRandPicture = "/rand"
 
-const ActionLinkToPicture = "/^(http)|(https):\\/\\/.*"
+const ActionLinkToPicture = "^((http)|(https)):\\/\\/.*"

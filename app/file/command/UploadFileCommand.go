@@ -15,7 +15,7 @@ import (
 
 type UploadCommand struct{}
 
-func (s UploadCommand) Run(update entity.TelegramUpdate) {
+func (u UploadCommand) Run(update entity.TelegramUpdate) {
 	var bot telegram.BotInterface = telegram.Bot{}
 	telegramMessage := update.Message
 
@@ -61,4 +61,18 @@ func (s UploadCommand) Run(update entity.TelegramUpdate) {
 	}
 
 	bot.SimpleSendMessage(fmt.Sprintf("Сохранено картинок %d", savedPictures), strconv.Itoa(update.Message.From.Id))
+}
+
+func (u UploadCommand) Support(update entity.TelegramUpdate) bool {
+	adminId, err := strconv.Atoi(helper.GetEnv("TELEGRAM_ID", ""))
+
+	if err != nil {
+		return false
+	}
+
+	if adminId == update.Message.From.Id {
+		return true
+	}
+
+	return false
 }

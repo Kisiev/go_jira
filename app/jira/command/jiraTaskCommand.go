@@ -11,7 +11,7 @@ import (
 
 type JiraTaskCommand struct{}
 
-func (u JiraTaskCommand) Run(update telegramEntity.TelegramUpdate) {
+func (j JiraTaskCommand) Run(update telegramEntity.TelegramUpdate) {
 	var bot telegram.BotInterface = telegram.Bot{}
 
 	telegramMessage := update.Message
@@ -30,4 +30,8 @@ func (u JiraTaskCommand) Run(update telegramEntity.TelegramUpdate) {
 	}
 
 	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id))
+}
+
+func (j JiraTaskCommand) Support(update telegramEntity.TelegramUpdate) bool {
+	return true
 }

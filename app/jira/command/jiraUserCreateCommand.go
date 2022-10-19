@@ -40,3 +40,7 @@ func (u UserCreateCommand) Run(update entity.TelegramUpdate) {
 
 	go bot.SimpleSendMessage("Пользователь добавлен", strconv.Itoa(user.TelegramId))
 }
+
+func (u UserCreateCommand) Support(update entity.TelegramUpdate) bool {
+	return true
+}

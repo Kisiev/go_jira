@@ -29,3 +29,7 @@ func (s StartCommand) Run(update entity.TelegramUpdate) {
 
 	bot.SimpleSendMessage("Пользователь зарегистрирован. Введите имя пользователя Jira", strconv.Itoa(user.TelegramId))
 }
+
+func (s StartCommand) Support(update entity.TelegramUpdate) bool {
+	return true
+}

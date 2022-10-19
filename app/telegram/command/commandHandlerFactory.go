@@ -44,7 +44,7 @@ func tryHandleWithRegex(command string, update entity.TelegramUpdate) bool {
 			return false
 		}
 
-		if compile.MatchString(command) {
+		if compile.MatchString(command) && handler.Support(update) {
 			handler.Run(update)
 		}
 	}
@@ -63,7 +63,9 @@ func tryHandle(command string, update entity.TelegramUpdate) bool {
 	}
 
 	if commandMap, found := commandMap[command]; found {
-		commandMap.Run(update)
+		if commandMap.Support(update) {
+			commandMap.Run(update)
+		}
 		return true
 	}
 

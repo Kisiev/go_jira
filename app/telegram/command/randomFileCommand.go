@@ -9,7 +9,7 @@ import (
 
 type RandomFileCommand struct{}
 
-func (s RandomFileCommand) Run(update entity.TelegramUpdate) {
+func (r RandomFileCommand) Run(update entity.TelegramUpdate) {
 	var bot telegram.BotInterface = telegram.Bot{}
 
 	fullPath, err := file.GetRandomFilepath()
@@ -19,4 +19,8 @@ func (s RandomFileCommand) Run(update entity.TelegramUpdate) {
 	}
 
 	bot.SendPhoto(fullPath, strconv.Itoa(update.Message.From.Id))
+}
+
+func (r RandomFileCommand) Support(update entity.TelegramUpdate) bool {
+	return true
 }

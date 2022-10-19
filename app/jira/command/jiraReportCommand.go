@@ -36,6 +36,10 @@ func (j JiraReportCommand) Run(update telegramEntity.TelegramUpdate) {
 	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id))
 }
 
+func (j JiraReportCommand) Support(update telegramEntity.TelegramUpdate) bool {
+	return true
+}
+
 func getYesterdayTasks(rawFilter string, yesterdayChan chan entity.JiraTask) {
 	yesterdayChan <- jira.GetTasksForUser(rawFilter)
 }

@@ -7,6 +7,8 @@ import (
 	"main/helper"
 	"main/telegram"
 	"main/telegram/entity"
+	"main/user"
+	"main/user/model"
 	"net/http"
 	"os"
 	"strconv"
@@ -64,15 +66,13 @@ func (u UploadCommand) Run(update entity.TelegramUpdate) {
 }
 
 func (u UploadCommand) Support(update entity.TelegramUpdate) bool {
-	adminId, err := strconv.Atoi(helper.GetEnv("TELEGRAM_ID", ""))
+	var bot telegram.BotInterface = telegram.Bot{}
 
-	if err != nil {
-		return false
-	}
-
-	if adminId == update.Message.From.Id {
+	telegramUser := strconv.Itoa(update.Message.From.Id)
+	if user.CheckPermission(telegramUser, model.PermissionCanUpload) {
 		return true
 	}
 
+	bot.SimpleSendMessage("Нет доступа", telegramUser)
 	return false
 }

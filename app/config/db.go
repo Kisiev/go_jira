@@ -40,6 +40,8 @@ func InitDb() {
 	DB.AutoMigrate(&model.Log{})
 	DB.AutoMigrate(&jiraModel.Task{})
 	DB.AutoMigrate(&model.Motivation{})
+	DB.AutoMigrate(&userModel.Permission{})
+	DB.AutoMigrate(&userModel.UsersPermission{})
 }
 
 func DbConnection() *gorm.DB {

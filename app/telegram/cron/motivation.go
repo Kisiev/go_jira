@@ -5,6 +5,8 @@ import (
 	"main/file"
 	"main/telegram"
 	"main/telegram/model"
+	userModule "main/user"
+	userModel "main/user/model"
 	"main/user/repository"
 	"math/rand"
 	"strconv"
@@ -24,6 +26,10 @@ func Motivate() {
 	}
 
 	for _, user := range users {
+		if !userModule.CheckPermission(strconv.Itoa(user.TelegramId), userModel.PermissionFunNotification) {
+			continue
+		}
+
 		filePath, err := file.GetRandomFilepath()
 
 		if err != nil {

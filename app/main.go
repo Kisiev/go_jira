@@ -35,13 +35,13 @@ func cronItems() {
 		return
 	}
 
-	//err = item.AddFunc("0 0 8-14 * * 1-5", func() {
-	//	telegramCron.Motivate()
-	//})
-	//
-	//if err != nil {
-	//	return
-	//}
+	err = item.AddFunc("0 0 8-14 * * 1-5", func() {
+		telegramCron.Motivate()
+	})
+
+	if err != nil {
+		return
+	}
 
 	item.Start()
 }

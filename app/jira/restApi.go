@@ -24,7 +24,7 @@ func GetTasksForUser(filter string) entity.JiraTask {
 	var payloadData = taskRequest{
 		Jql:        filter,
 		StartAt:    0,
-		MaxResults: 20,
+		MaxResults: 200,
 		Fields: []string{
 			"id",
 			"key",

@@ -22,5 +22,5 @@ func (r RandomFileCommand) Run(update entity.TelegramUpdate) {
 }
 
 func (r RandomFileCommand) Support(update entity.TelegramUpdate) bool {
-	return true
+	return false
 }

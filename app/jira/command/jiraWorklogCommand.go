@@ -28,7 +28,7 @@ func (j JiraWorkLogCommand) Run(update telegramEntity.TelegramUpdate) {
 	telegramMessage := update.Message
 	user := repository.FindJiraUserByTelegramId(telegramMessage.From.Id)
 
-	dateStart := time.Now().AddDate(0, 0, -10).Format("2006-01-02")
+	dateStart := time.Now().AddDate(0, 0, -7).Format("2006-01-02")
 	dateEnd := time.Now().AddDate(0, 0, 2).Format("2006-01-02")
 
 	rawJiraFilter := fmt.Sprintf("worklogDate >= '%s' and worklogDate < '%s' and worklogAuthor = %s ORDER BY priority DESC, created DESC", dateStart, dateEnd, user.UserName)

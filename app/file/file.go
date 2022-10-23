@@ -2,35 +2,30 @@ package file
 
 import (
 	"errors"
-	"io/ioutil"
-	"main/helper"
+	"fmt"
+	"main/file/model"
 	"math/rand"
 	"os"
 	"time"
 )
 
-func GetRandomFilepath() (string, error) {
-	files, err := ioutil.ReadDir(helper.GetEnv("FILES_PATH", ""))
-	if err != nil {
-		return "", err
-	}
-
+func GetRandomFilepath(files []model.File) (model.File, error) {
 	fileCount := len(files)
 
 	if fileCount == 0 {
-		return "", err
+		return model.File{}, fmt.Errorf("нет файлов")
 	}
 
 	rand.Seed(time.Now().UnixNano())
 	min := 0
 	max := fileCount
-	randomFile := rand.Intn(max-min) + min
+	randomFileIndex := rand.Intn(max-min) + min
 
-	fullPath := helper.GetEnv("FILES_PATH", "") + files[randomFile].Name()
+	fullPath := files[randomFileIndex].Path
 
-	if _, err = os.Stat(fullPath); errors.Is(err, os.ErrNotExist) {
-		return "", err
+	if _, err := os.Stat(fullPath); errors.Is(err, os.ErrNotExist) {
+		return model.File{}, err
 	}
 
-	return fullPath, nil
+	return files[randomFileIndex], nil
 }

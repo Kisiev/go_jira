@@ -31,6 +31,13 @@ type photoMail struct {
 
 var logService service.LogService
 
+var contentTypeMap = map[string]string{
+	"image/jpeg": "photo",
+	"image/png":  "photo",
+	"video/mp4":  "video",
+	"video/gif":  "animation",
+}
+
 func getUrl() string {
 	botApiKey := helper.GetEnv("TELEGRAM_BOT", "")
 
@@ -96,6 +103,58 @@ func (b Bot) SendPhoto(photoPath, userId string) {
 	repository.Create(&logItem)
 }
 
+func (b Bot) SendVideo(videoPath, userId string) {
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
+	if err != nil {
+		return
+	}
+
+	videoBytes, err := ioutil.ReadFile(videoPath)
+	if err != nil {
+		panic(err)
+	}
+	videoData := tgbotapi.FileBytes{
+		Name:  "video",
+		Bytes: videoBytes,
+	}
+
+	chatId, err := strconv.Atoi(userId)
+	if err != nil {
+		return
+	}
+	_, err = botApi.Send(tgbotapi.NewVideoUpload(int64(chatId), videoData))
+
+	payloadData, _ := json.Marshal(mail{ChatId: userId, Text: videoPath, ParseMode: "html"})
+	logItem := model.Log{IsBot: true, TelegramId: chatId, Payload: string(payloadData)}
+	repository.Create(&logItem)
+}
+
+func (b Bot) SendAnimation(animationPath, userId string) {
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
+	if err != nil {
+		return
+	}
+
+	animBytes, err := ioutil.ReadFile(animationPath)
+	if err != nil {
+		panic(err)
+	}
+	animationData := tgbotapi.FileBytes{
+		Name:  "animation",
+		Bytes: animBytes,
+	}
+
+	chatId, err := strconv.Atoi(userId)
+	if err != nil {
+		return
+	}
+	_, err = botApi.Send(tgbotapi.NewVideoUpload(int64(chatId), animationData))
+
+	payloadData, _ := json.Marshal(mail{ChatId: userId, Text: animationPath, ParseMode: "html"})
+	logItem := model.Log{IsBot: true, TelegramId: chatId, Payload: string(payloadData)}
+	repository.Create(&logItem)
+}
+
 func (b Bot) SetWebhook(url string) []byte {
 	if len(url) == 0 {
 		url = "https://" + helper.GetEnv("DOMAIN", "") + "/telegram/webhook"
@@ -134,4 +193,22 @@ func (b Bot) GetWebhookInfo() []byte {
 	}
 
 	return body
+}
+
+func (b Bot) SendByMessageType(contentType, messageContent, userId string) {
+	content, ok := contentTypeMap[contentType]
+
+	if ok == false {
+		return
+	}
+
+	if content == "video" {
+		b.SendVideo(messageContent, userId)
+	} else if content == "photo" {
+		b.SendPhoto(messageContent, userId)
+	} else if content == "animation" {
+		b.SendAnimation(messageContent, userId)
+	} else {
+		b.SendPhoto(messageContent, userId)
+	}
 }

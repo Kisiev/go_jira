@@ -3,6 +3,7 @@ package cron
 import (
 	"main/config"
 	"main/file"
+	fileModel "main/file/model"
 	"main/telegram"
 	"main/telegram/model"
 	userModule "main/user"
@@ -30,7 +31,9 @@ func Motivate() {
 			continue
 		}
 
-		filePath, err := file.GetRandomFilepath()
+		var files []fileModel.File
+		config.DbConnection().Find(&files)
+		fileItem, err := file.GetRandomFilepath(files)
 
 		if err != nil {
 			return
@@ -41,7 +44,7 @@ func Motivate() {
 		max := len(motivation)
 		randomMotivationIndex := rand.Intn(max-min) + min
 
-		bot.SendPhoto(filePath, strconv.Itoa(user.TelegramId))
+		bot.SendByMessageType(fileItem.Type, fileItem.Path, strconv.Itoa(user.TelegramId))
 		bot.SimpleSendMessage(motivation[randomMotivationIndex].Title, strconv.Itoa(user.TelegramId))
 	}
 }

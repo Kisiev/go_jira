@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	fileModel "main/file/model"
 	"main/helper"
 	jiraModel "main/jira/model"
 	"main/telegram/model"
@@ -42,6 +43,7 @@ func InitDb() {
 	DB.AutoMigrate(&model.Motivation{})
 	DB.AutoMigrate(&userModel.Permission{})
 	DB.AutoMigrate(&userModel.UsersPermission{})
+	DB.AutoMigrate(&fileModel.File{})
 }
 
 func DbConnection() *gorm.DB {

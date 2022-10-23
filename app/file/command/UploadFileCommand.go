@@ -12,7 +12,6 @@ import (
 	"main/telegram/entity"
 	"main/user"
 	"main/user/model"
-	"mime"
 	"net/http"
 	"os"
 	"strconv"
@@ -22,10 +21,10 @@ import (
 type UploadCommand struct{}
 
 var allowedExtension = map[string]string{
-	".jpeg": "jpeg",
-	".png":  "png",
-	".gif":  "gif",
-	".mp4":  "mp4",
+	"image/jpeg": "jpeg",
+	"image/png":  "png",
+	"image/gif":  "gif",
+	"video/mp4":  "mp4",
 }
 
 func (u UploadCommand) Run(update entity.TelegramUpdate) {
@@ -50,13 +49,7 @@ func (u UploadCommand) Run(update entity.TelegramUpdate) {
 		}
 
 		mimeType := http.DetectContentType(imageContent)
-		extensions, err := mime.ExtensionsByType(mimeType)
-
-		if err != nil {
-			continue
-		}
-
-		extensionTxt, err := getAllowedExtension(extensions)
+		extensionTxt, err := getAllowedExtensionByMimeType(mimeType)
 
 		if err != nil {
 			bot.SimpleSendMessage(err.Error()+" "+mimeType, strconv.Itoa(update.Message.From.Id))
@@ -99,11 +92,9 @@ func (u UploadCommand) Run(update entity.TelegramUpdate) {
 	bot.SimpleSendMessage(fmt.Sprintf("Сохранено картинок %d", savedPictures), strconv.Itoa(update.Message.From.Id))
 }
 
-func getAllowedExtension(extensions []string) (string, error) {
-	for _, extension := range extensions {
-		if value, ok := allowedExtension[extension]; ok {
-			return value, nil
-		}
+func getAllowedExtensionByMimeType(mimetype string) (string, error) {
+	if value, ok := allowedExtension[mimetype]; ok {
+		return value, nil
 	}
 
 	return "", fmt.Errorf("недопустимый формат")

@@ -59,7 +59,7 @@ func (u UploadCommand) Run(update entity.TelegramUpdate) {
 		extensionTxt, err := getAllowedExtension(extensions)
 
 		if err != nil {
-			bot.SimpleSendMessage(err.Error(), strconv.Itoa(update.Message.From.Id))
+			bot.SimpleSendMessage(err.Error()+" "+mimeType, strconv.Itoa(update.Message.From.Id))
 			continue
 		}
 

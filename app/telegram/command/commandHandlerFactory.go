@@ -31,6 +31,13 @@ func Handle(update entity.TelegramUpdate) {
 	if tryHandleWithRegex(update.Message.Text, update) {
 		return
 	}
+
+	sendUnknownCommand(update)
+}
+
+func sendUnknownCommand(update entity.TelegramUpdate) {
+	unknownCommand := UnknownCommand{}
+	unknownCommand.Run(update)
 }
 
 func tryHandleWithRegex(command string, update entity.TelegramUpdate) bool {

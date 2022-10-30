@@ -29,6 +29,7 @@ func FindByTelegramId(telegramId int) model.User {
 	var user model.User
 	config.DbConnection().
 		Preload("Permissions.Permission").
+		Preload("Settings.Setting").
 		Find(&user, &model.User{TelegramId: telegramId})
 	return user
 }

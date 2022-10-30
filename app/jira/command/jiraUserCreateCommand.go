@@ -26,7 +26,7 @@ func (u UserCreateCommand) Run(update entity.TelegramUpdate) {
 	err := validator.Validate(jiraUser)
 
 	if err != nil {
-		go bot.SimpleSendMessage(err.Error(), strconv.Itoa(user.TelegramId))
+		go bot.SimpleSendMessage(err.Error(), strconv.Itoa(user.TelegramId), nil)
 		return
 	}
 
@@ -38,7 +38,7 @@ func (u UserCreateCommand) Run(update entity.TelegramUpdate) {
 
 	jira.LoadAndGetNewTasks(jiraUser)
 
-	go bot.SimpleSendMessage("Пользователь добавлен", strconv.Itoa(user.TelegramId))
+	go bot.SimpleSendMessage("Пользователь добавлен", strconv.Itoa(user.TelegramId), nil)
 }
 
 func (u UserCreateCommand) Support(update entity.TelegramUpdate) bool {

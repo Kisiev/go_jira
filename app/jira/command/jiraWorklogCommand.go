@@ -69,7 +69,7 @@ func (j JiraWorkLogCommand) Run(update telegramEntity.TelegramUpdate) {
 		}
 	}
 	formatMessage := formatMessage(userWorkLog)
-	bot.SimpleSendMessage(formatMessage, strconv.Itoa(user.User.TelegramId))
+	bot.SimpleSendMessage(formatMessage, strconv.Itoa(user.User.TelegramId), nil)
 }
 
 func (j JiraWorkLogCommand) Support(update telegramEntity.TelegramUpdate) bool {

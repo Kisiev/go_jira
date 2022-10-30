@@ -29,7 +29,7 @@ func (j JiraTaskCommand) Run(update telegramEntity.TelegramUpdate) {
 		message = fmt.Sprintf("Для пользователя %s не найдены задачи", user.UserName)
 	}
 
-	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id))
+	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id), nil)
 }
 
 func (j JiraTaskCommand) Support(update telegramEntity.TelegramUpdate) bool {

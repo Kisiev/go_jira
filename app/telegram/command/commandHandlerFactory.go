@@ -67,6 +67,7 @@ func tryHandle(command string, update entity.TelegramUpdate) bool {
 		constant.ActionReport:          jiraCommand.JiraReportCommand{},
 		constant.ActionWorkLog:         jiraCommand.JiraWorkLogCommand{},
 		constant.ActionRandPicture:     RandomFileCommand{},
+		constant.ActionSettings:        SettingCommand{},
 	}
 
 	if commandMap, found := commandMap[command]; found {

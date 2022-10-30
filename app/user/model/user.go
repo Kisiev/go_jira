@@ -12,6 +12,7 @@ type User struct {
 	TelegramId  int    `gorm:"null;column:telegram_id"`
 	NextAction  string `gorm:"null;column:next_action"`
 	Permissions []UsersPermission
+	Settings    []UserSetting
 }
 
 type JiraUser struct {

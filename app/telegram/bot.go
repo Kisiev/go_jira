@@ -13,7 +13,6 @@ import (
 	"main/telegram/service"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 type Bot struct{}
@@ -22,6 +21,7 @@ type mail struct {
 	ChatId    string `json:"chat_id"`
 	Text      string `json:"text"`
 	ParseMode string `json:"parse_mode"`
+	Keyboard  string `json:"reply_markup"`
 }
 
 type photoMail struct {
@@ -48,33 +48,102 @@ func getUrl() string {
 	return helper.GetEnv("TELEGRAM_URL", "") + "/bot" + botApiKey
 }
 
-func (b Bot) SimpleSendMessage(message string, userId string) {
-	url := getUrl() + "/sendMessage"
-	method := "POST"
+func (b Bot) RemoveKeyboard(messageId int, userId string) {
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
+	if err != nil {
+		return
+	}
 
-	payloadData, _ := json.Marshal(mail{ChatId: userId, Text: message, ParseMode: "html"})
-	payload := strings.NewReader(string(payloadData))
 	user, err := strconv.Atoi(userId)
 
 	if err != nil {
 		return
 	}
 
-	logItem := model.Log{IsBot: true, TelegramId: user, Payload: string(payloadData)}
+	msg := tgbotapi.NewEditMessageReplyMarkup(int64(user), messageId, tgbotapi.NewInlineKeyboardMarkup())
+	msg.ReplyMarkup = nil
+
+	_, err = botApi.Send(msg)
+
+	if err != nil {
+		return
+	}
+
+	logItem := model.Log{IsBot: true, TelegramId: user, Payload: ""}
 	repository.Create(&logItem)
+}
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, payload)
+func (b Bot) EditMessageKeyboard(messageId int, userId string, keyboard tgbotapi.InlineKeyboardMarkup) {
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
+	if err != nil {
+		return
+	}
+
+	user, err := strconv.Atoi(userId)
 
 	if err != nil {
 		return
 	}
-	req.Header.Add("Content-Type", "application/json")
 
-	_, err = client.Do(req)
+	msg := tgbotapi.NewEditMessageReplyMarkup(int64(user), messageId, keyboard)
+
+	_, err = botApi.Send(msg)
+
 	if err != nil {
 		return
 	}
+
+	logItem := model.Log{IsBot: true, TelegramId: user, Payload: ""}
+	repository.Create(&logItem)
+}
+
+func (b Bot) EditMessage(messageId int, message string, userId string) {
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
+	if err != nil {
+		return
+	}
+
+	user, err := strconv.Atoi(userId)
+
+	if err != nil {
+		return
+	}
+
+	msg := tgbotapi.NewEditMessageText(int64(user), messageId, message)
+
+	_, err = botApi.Send(msg)
+
+	if err != nil {
+		return
+	}
+
+	logItem := model.Log{IsBot: true, TelegramId: user, Payload: message}
+	repository.Create(&logItem)
+}
+
+func (b Bot) SimpleSendMessage(message string, userId string, keyboard interface{}) {
+	botApi, err := tgbotapi.NewBotAPI(helper.GetEnv("TELEGRAM_BOT", ""))
+	if err != nil {
+		return
+	}
+
+	user, err := strconv.Atoi(userId)
+
+	if err != nil {
+		return
+	}
+
+	msg := tgbotapi.NewMessage(int64(user), message)
+	msg.ReplyMarkup = keyboard
+
+	_, err = botApi.Send(msg)
+
+	if err != nil {
+		return
+	}
+
+	logItem := model.Log{IsBot: true, TelegramId: user, Payload: message}
+	repository.Create(&logItem)
 }
 
 func (b Bot) SendPhoto(photoPath, userId string) {

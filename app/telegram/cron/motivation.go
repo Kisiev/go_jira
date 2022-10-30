@@ -31,6 +31,10 @@ func Motivate() {
 			continue
 		}
 
+		if !userModule.CanNotification(strconv.Itoa(user.TelegramId)) {
+			continue
+		}
+
 		var files []fileModel.File
 		config.DbConnection().Find(&files)
 		fileItem, err := file.GetRandomFilepath(files)
@@ -45,6 +49,6 @@ func Motivate() {
 		randomMotivationIndex := rand.Intn(max-min) + min
 
 		bot.SendByMessageType(fileItem.Type, fileItem.Path, strconv.Itoa(user.TelegramId))
-		bot.SimpleSendMessage(motivation[randomMotivationIndex].Title, strconv.Itoa(user.TelegramId))
+		bot.SimpleSendMessage(motivation[randomMotivationIndex].Title, strconv.Itoa(user.TelegramId), nil)
 	}
 }

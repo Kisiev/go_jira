@@ -52,7 +52,7 @@ func (u UploadCommand) Run(update entity.TelegramUpdate) {
 		extensionTxt, err := getAllowedExtensionByMimeType(mimeType)
 
 		if err != nil {
-			bot.SimpleSendMessage(err.Error()+" "+mimeType, strconv.Itoa(update.Message.From.Id))
+			bot.SimpleSendMessage(err.Error()+" "+mimeType, strconv.Itoa(update.Message.From.Id), nil)
 			continue
 		}
 
@@ -89,7 +89,7 @@ func (u UploadCommand) Run(update entity.TelegramUpdate) {
 		savedPictures++
 	}
 
-	bot.SimpleSendMessage(fmt.Sprintf("Сохранено картинок %d", savedPictures), strconv.Itoa(update.Message.From.Id))
+	bot.SimpleSendMessage(fmt.Sprintf("Сохранено картинок %d", savedPictures), strconv.Itoa(update.Message.From.Id), nil)
 }
 
 func getAllowedExtensionByMimeType(mimetype string) (string, error) {
@@ -108,6 +108,6 @@ func (u UploadCommand) Support(update entity.TelegramUpdate) bool {
 		return true
 	}
 
-	bot.SimpleSendMessage("Нет доступа", telegramUser)
+	bot.SimpleSendMessage("Нет доступа", telegramUser, nil)
 	return false
 }

@@ -44,6 +44,8 @@ func InitDb() {
 	DB.AutoMigrate(&userModel.Permission{})
 	DB.AutoMigrate(&userModel.UsersPermission{})
 	DB.AutoMigrate(&fileModel.File{})
+	DB.AutoMigrate(&userModel.Setting{})
+	DB.AutoMigrate(&userModel.UserSetting{})
 }
 
 func DbConnection() *gorm.DB {

@@ -36,6 +36,6 @@ func (r RandomFileCommand) Support(update entity.TelegramUpdate) bool {
 		return true
 	}
 
-	bot.SimpleSendMessage("Нет доступа", telegramUser)
+	bot.SimpleSendMessage("Нет доступа", telegramUser, nil)
 	return false
 }

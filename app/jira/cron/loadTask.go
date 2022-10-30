@@ -22,6 +22,6 @@ func updateTasksForUserAndNotify(user userModule.JiraUser) {
 	message := jira.LoadAndGetNewTasks(user)
 
 	if len(message) != 0 {
-		bot.SimpleSendMessage("Новые задачи\n\n"+message, strconv.Itoa(user.User.TelegramId))
+		bot.SimpleSendMessage("Новые задачи\n\n"+message, strconv.Itoa(user.User.TelegramId), nil)
 	}
 }

@@ -33,7 +33,7 @@ func (j JiraReportCommand) Run(update telegramEntity.TelegramUpdate) {
 
 	message := formatReport(<-yesterdayChan, <-todayChan)
 
-	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id))
+	go bot.SimpleSendMessage(message, strconv.Itoa(telegramMessage.From.Id), nil)
 }
 
 func (j JiraReportCommand) Support(update telegramEntity.TelegramUpdate) bool {

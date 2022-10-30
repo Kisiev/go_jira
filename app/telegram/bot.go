@@ -135,6 +135,7 @@ func (b Bot) SimpleSendMessage(message string, userId string, keyboard interface
 
 	msg := tgbotapi.NewMessage(int64(user), message)
 	msg.ReplyMarkup = keyboard
+	msg.ParseMode = "html"
 
 	_, err = botApi.Send(msg)
 

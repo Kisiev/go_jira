@@ -6,6 +6,7 @@ import (
 	"main/telegram/entity"
 	"main/user/constant"
 	"main/user/model"
+	"main/user/repository"
 	"strconv"
 	"strings"
 )
@@ -15,14 +16,14 @@ type NotificationSwitcherCommand struct{}
 func (n NotificationSwitcherCommand) Run(update entity.TelegramUpdateInline) {
 	var bot telegram.BotInterface = telegram.Bot{}
 
-	user := model.User{TelegramId: update.CallbackQuery.From.Id}
-	notificationSetting := model.Setting{Code: constant.NotificationSetting}
-
-	config.DbConnection().First(&user)
-	config.DbConnection().First(&notificationSetting)
+	user := repository.FindByTelegramId(update.CallbackQuery.From.Id)
+	notificationSetting := repository.FindSettingByCode(constant.NotificationSetting)
 
 	userNotificationSetting := model.UserSetting{UserID: int(user.ID), SettingID: int(notificationSetting.ID)}
-	config.DbConnection().FirstOrCreate(&userNotificationSetting)
+	if config.DbConnection().Where("user_id = ? AND setting_id = ?", user.ID, notificationSetting.ID).
+		First(&userNotificationSetting).RowsAffected == 0 {
+		config.DbConnection().Save(&userNotificationSetting)
+	}
 
 	value := strings.ReplaceAll(update.CallbackQuery.Data, constant.NotificationSetting+"_", "")
 

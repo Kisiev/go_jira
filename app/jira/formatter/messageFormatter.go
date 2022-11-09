@@ -6,7 +6,7 @@ import (
 )
 
 func FormatMessage(task model.Task) string {
-	return fmt.Sprintf("📚\t<b>Задача</b>: %s\n📎\t<b>Ссылка</b>: %s\n⚡️\t<b>Приоритет</b>: %s\n⚠️\t<b>Статус</b>: %s\n\n", task.Title, task.Url, priorityFormat(task.Priority), task.Status)
+	return fmt.Sprintf("📚\t<b>Задача</b>: %s\n📎\t<b>Ссылка</b>: %s\n⚡️\t<b>Приоритет</b>: %s\n⚠️\t<b>Статус</b>: %s\n🏷\t<b>Тип</b>: %s\n\n", task.Title, task.Url, priorityFormat(task.Priority), task.Status, task.Type)
 }
 
 func priorityFormat(priority int) string {

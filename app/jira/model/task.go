@@ -9,5 +9,6 @@ type Task struct {
 	Priority int    `json:"priority"`
 	Status   string `json:"status"`
 	UserId   int    `json:"user_id"`
+	Type     string `json:"type"`
 	User     model.User
 }

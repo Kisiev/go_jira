@@ -17,6 +17,7 @@ func (f JiraFormatter) Format(task entity.JiraTask) []model.Task {
 			Priority: mapPriority(item.Fields.Priority.Name),
 			Title:    item.Fields.Summary,
 			Status:   item.Fields.Status.Name,
+			Type:     item.Fields.Issuetype.Name,
 		}
 
 		tasks = append(tasks, task)

@@ -32,10 +32,10 @@ func CheckIfExist(task jiraModel.Task) int64 {
 }
 
 func CreateIfNotExistTask(task *jiraModel.Task) {
-	if config.DbConnection().Model(&task).
+	if config.DbConnection().Model(jiraModel.Task{}).
 		Where("user_id = ? AND url = ?", task.UserId, task.Url).
 		Updates(&task).RowsAffected == 0 {
-		config.DbConnection().Create(&task)
+		config.DbConnection().Create(task)
 	}
 }
 

@@ -3,7 +3,6 @@ package jira
 import (
 	"fmt"
 	taskFormatter "main/jira/formatter"
-	"main/jira/model"
 	"main/jira/repository"
 	userModule "main/user/model"
 )
@@ -18,12 +17,13 @@ func LoadAndGetNewTasks(user userModule.JiraUser) string {
 	var message string
 	var notDeletingTaskUrls []string
 	for _, item := range data {
-		newTask := model.Task{Title: item.Title, Url: item.Url, Priority: item.Priority, Status: item.Status, UserId: user.UserID}
-		if repository.CheckIfExist(newTask) == 0 {
-			message += taskFormatter.FormatMessage(newTask)
+		item.UserId = user.UserID
+
+		if repository.CheckIfExist(item) == 0 {
+			message += taskFormatter.FormatMessage(item)
 		}
-		repository.CreateIfNotExistTask(&newTask)
-		notDeletingTaskUrls = append(notDeletingTaskUrls, newTask.Url)
+		repository.CreateIfNotExistTask(&item)
+		notDeletingTaskUrls = append(notDeletingTaskUrls, item.Url)
 	}
 
 	repository.DeleteTasksWithout(user.UserID, notDeletingTaskUrls)

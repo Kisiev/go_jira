@@ -1,13 +1,12 @@
 package command
 
 import (
-	"main/config"
-	"main/file"
-	fileModel "main/file/model"
+	fileRepository "main/file/repository"
 	"main/telegram"
 	"main/telegram/entity"
 	"main/user"
 	"main/user/model"
+	userRepository "main/user/repository"
 	"strconv"
 )
 
@@ -16,16 +15,12 @@ type RandomFileCommand struct{}
 func (r RandomFileCommand) Run(update entity.TelegramUpdate) {
 	var bot telegram.BotInterface = telegram.Bot{}
 
-	var files []fileModel.File
-	config.DbConnection().Find(&files)
+	userModel := userRepository.FindByTelegramId(update.Message.From.Id)
+	fileCount := fileRepository.GetRandPathForUser(int(userModel.ID))
+	fileModel := fileRepository.GetById(fileCount.ID)
+	fileRepository.AddCountToFileForUser(int(fileModel.ID), int(userModel.ID), fileCount.Count+1)
 
-	fileItem, err := file.GetRandomFilepath(files)
-
-	if err != nil {
-		return
-	}
-
-	bot.SendByMessageType(fileItem.Type, fileItem.Path, strconv.Itoa(update.Message.From.Id))
+	bot.SendByMessageType(fileModel.Type, fileModel.Path, strconv.Itoa(update.Message.From.Id))
 }
 
 func (r RandomFileCommand) Support(update entity.TelegramUpdate) bool {

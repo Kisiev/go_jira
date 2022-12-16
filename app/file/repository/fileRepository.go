@@ -26,9 +26,7 @@ func GetRandPathForUser(userId int) entity.FileCount {
 	var fileCount entity.FileCount
 	config.DbConnection().Raw("select files.id as id, coalesce(count, 0) as count "+
 		"From files "+
-		"left join file_loggings fl on files.id = fl.file_id "+
-		"where user_id = ? "+
-		"or user_id is null "+
+		"left join file_loggings fl on files.id = fl.file_id and user_id = ?"+
 		"order by count, random() limit 1", userId).First(&fileCount)
 
 	return fileCount
